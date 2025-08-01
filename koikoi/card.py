@@ -1,0 +1,50 @@
+# card.py
+# Represents a single Hanafuda card
+
+import pygame
+from constants import CARD_WIDTH, CARD_HEIGHT, BLACK, WHITE
+
+# Define some colors for different card types for placeholder graphics
+CATEGORY_COLORS = {
+    'hikari': (255, 255, 0),   # Gold
+    'tane': (255, 0, 0),       # Red
+    'tan': (0, 0, 255),         # Blue
+    'kasu': (128, 128, 128),  # Grey
+}
+
+class Card:
+    def __init__(self, month, category, points=0):
+        self.month = month
+        self.category = category
+        self.points = points
+        self.image = self._create_placeholder_image()
+        self.rect = self.image.get_rect()
+        self.is_face_up = True
+
+    def _create_placeholder_image(self):
+        """Creates a placeholder image for the card."""
+        image = pygame.Surface((CARD_WIDTH, CARD_HEIGHT))
+
+        # Get color based on category, default to white
+        color = CATEGORY_COLORS.get(self.category, WHITE)
+        image.fill(color)
+
+        # Draw a border
+        pygame.draw.rect(image, BLACK, image.get_rect(), 2)
+
+        # Add text
+        font = pygame.font.Font(None, 20)
+        month_text = font.render(f"M: {self.month}", True, BLACK)
+        cat_text = font.render(self.category.capitalize(), True, BLACK)
+
+        image.blit(month_text, (5, 5))
+        image.blit(cat_text, (5, 25))
+
+        return image
+
+    def draw(self, surface):
+        """Draws the card on the given surface."""
+        surface.blit(self.image, self.rect)
+
+    def __repr__(self):
+        return f"Card({self.month}, {self.category})"
