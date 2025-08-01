@@ -1,0 +1,2 @@
+# Hanafuda
+PythonでGUIで花札のこいこいをCPUと対戦できるアプリ
