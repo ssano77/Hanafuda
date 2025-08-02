@@ -1,5 +1,5 @@
 # Python
-__pycache__/
+koikoi/__pycache__/
 *.pyc
 *.pyo
 *.pyd
