@@ -35,13 +35,25 @@ class Player:
         For a human player, this might just wait for input.
         """
         if self.is_cpu:
-            # Basic AI: find the first playable card
+            # Improved AI: prioritize cards that match field cards
+            # First, try to find cards that match field cards
+            matching_cards = []
             for hand_card in self.hand:
                 for field_card in field_cards:
                     if hand_card.month == field_card.month:
-                        return hand_card
-            # If no match, play the first card
-            return self.hand[0] if self.hand else None
+                        matching_cards.append((hand_card, field_card))
+            
+            if matching_cards:
+                # Prioritize higher value matches
+                matching_cards.sort(key=lambda x: x[1].points, reverse=True)
+                return matching_cards[0][0]
+            
+            # If no match, play the lowest value card
+            if self.hand:
+                self.hand.sort(key=lambda x: x.points)
+                return self.hand[0]
+            
+            return None
         else:
             # Human player logic is handled by UIManager
             return None
