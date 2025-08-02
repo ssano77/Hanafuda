@@ -110,9 +110,10 @@ class UIManager:
 
     def draw_ui_elements(self):
         """Draws scores and game state information."""
-        turn_text_str = f"Turn: {self.game_controller.current_player.name}"
-        turn_text = self.font.render(turn_text_str, True, WHITE)
-        self.screen.blit(turn_text, (SCREEN_WIDTH - 250, 50))
+        if self.game_controller.current_player:
+            turn_text_str = f"Turn: {self.game_controller.current_player.name}"
+            turn_text = self.font.render(turn_text_str, True, WHITE)
+            self.screen.blit(turn_text, (SCREEN_WIDTH - 250, 50))
 
         # Display player yaku
         player_yaku_str = f"Player Yaku: {self.game_controller.player.yaku_list}"

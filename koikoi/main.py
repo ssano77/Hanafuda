@@ -16,6 +16,8 @@ def main():
     game_controller = GameController()
     ui_manager = UIManager(screen, game_controller)
 
+    game_controller.start_game()
+
     running = True
     while running:
         # Event handling
