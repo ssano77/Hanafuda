@@ -191,3 +191,8 @@ class GameController:
                 self.execute_turn(card_to_play)
             else:
                 self.switch_turns() # CPU has no cards left
+
+    def update(self):
+        """Updates the game state, currently only for CPU turn."""
+        if self.game_state == GAME_STATE_CPU_TURN:
+            self.cpu_turn()
