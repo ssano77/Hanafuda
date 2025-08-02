@@ -33,7 +33,7 @@ class UIManager:
     def draw_field(self):
         """Draws the cards on the field."""
         for i, card in enumerate(self.game_controller.field.cards):
-            card.rect.topleft = (100 + (i % 8) * (CARD_WIDTH * 0.7), 350 + (i // 8) * (CARD_HEIGHT + 5))
+            card.rect.topleft = (100 + (i % 8) * (CARD_WIDTH * 0.7), 250 + (i // 8) * (CARD_HEIGHT + 5))
             card.draw(self.screen)
 
     def draw_player_hand(self):
@@ -74,7 +74,7 @@ class UIManager:
     def draw_captured_piles(self):
         """Draws the cards captured by each player, sorted by category."""
         players_info = [
-            {"player": self.game_controller.player, "base_pos": (50, SCREEN_HEIGHT - 450), "name": "Player"},
+            {"player": self.game_controller.player, "base_pos": (50, 520), "name": "Player"},
             {"player": self.game_controller.cpu, "base_pos": (50, 50), "name": "CPU"}
         ]
         categories = ['hikari', 'tane', 'tan', 'kasu']
