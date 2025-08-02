@@ -2,13 +2,16 @@
 # Represents a player in the game
 
 class Player:
-    def __init__(self, name, is_cpu=False):
+    def __init__(self, name, is_parent=False, is_cpu=False):
         self.name = name
         self.is_cpu = is_cpu
+        self.is_parent = is_parent
         self.hand = []  # Cards in the player's hand
         self.captured_cards = [] # Cards won by the player
-        self.yaku_list = [] # List of yaku achieved
-        self.score = 0
+        self.yaku_list = [] # List of yaku achieved in the current round
+        self.monthly_score = 0 # Score for the current month/round
+        self.total_score = 0 # Total score for the whole game
+        self.has_koikoied = False # Flag for "koikoi"
 
     def add_cards_to_hand(self, cards):
         """Adds a list of cards to the player's hand."""
@@ -24,13 +27,6 @@ class Player:
     def capture_cards(self, cards):
         """Adds cards to the player's captured pile."""
         self.captured_cards.extend(cards)
-
-    def calculate_score(self):
-        """Calculates the player's score based on captured cards and yaku."""
-        # This will interface with the Yaku class later
-        self.score = 0 # Reset score
-        # ... logic to calculate score from self.yaku_list ...
-        pass
 
     def choose_card_to_play(self, field_cards):
         """

@@ -80,16 +80,7 @@ class Deck:
         """Creates a full 48-card deck from the CARD_DATA."""
         self.cards = []
         for month, name, category, points in CARD_DATA:
-            # The Card class now takes month, category, and points.
-            # I'm passing the name to the category for now to have more specific placeholders.
-            # This can be refined later. A 'name' attribute should be added to Card.
-            # For now, let's just pass the main category.
-            card = Card(month, category, points)
-            # A better approach would be to add a 'name' attribute to the Card class.
-            # Let's modify the card class to accept a name.
-            # No, let's stick to the plan and modify the deck first.
-            # I will modify the Card class later if needed.
-            # The category is enough for the placeholder graphics.
+            card = Card(month, category, name, points)
             self.cards.append(card)
 
 

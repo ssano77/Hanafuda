@@ -13,9 +13,10 @@ CATEGORY_COLORS = {
 }
 
 class Card:
-    def __init__(self, month, category, points=0):
+    def __init__(self, month, category, name, points=0):
         self.month = month
         self.category = category
+        self.name = name
         self.points = points
         self.image = self._create_placeholder_image()
         self.rect = self.image.get_rect()
@@ -33,12 +34,14 @@ class Card:
         pygame.draw.rect(image, BLACK, image.get_rect(), 2)
 
         # Add text
-        font = pygame.font.Font(None, 20)
+        font = pygame.font.Font(None, 18)
         month_text = font.render(f"M: {self.month}", True, BLACK)
+        name_text = font.render(self.name, True, BLACK)
         cat_text = font.render(self.category.capitalize(), True, BLACK)
 
         image.blit(month_text, (5, 5))
-        image.blit(cat_text, (5, 25))
+        image.blit(name_text, (5, 25))
+        image.blit(cat_text, (5, 45))
 
         return image
 
@@ -47,4 +50,4 @@ class Card:
         surface.blit(self.image, self.rect)
 
     def __repr__(self):
-        return f"Card({self.month}, {self.category})"
+        return f"Card({self.month}, '{self.name}', '{self.category}')"
