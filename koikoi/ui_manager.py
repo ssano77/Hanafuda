@@ -56,21 +56,48 @@ class UIManager:
 
     def _draw_card_pile(self, surface, cards, position, title):
         """Helper to draw a pile of captured cards."""
-        title_text = self.font.render(title, True, WHITE)
+        # Use small font for these titles to save space
+        title_text = self.small_font.render(title, True, WHITE)
         surface.blit(title_text, (position[0], position[1]))
 
         if not cards:
+            # Draw an empty box placeholder to maintain layout
+            placeholder_rect = pygame.Rect(position[0], position[1] + 25, (CARD_WIDTH // 2 + 5) * 4 - 5, CARD_HEIGHT // 2)
+            pygame.draw.rect(surface, (0, 60, 0), placeholder_rect, 1)
             return
 
         for i, card in enumerate(cards):
             # Display captured cards smaller and overlapping
             card_small_img = pygame.transform.scale(card.image, (CARD_WIDTH // 2, CARD_HEIGHT // 2))
-            surface.blit(card_small_img, (position[0] + (i % 4) * (CARD_WIDTH // 2 + 5), position[1] + 30 + (i // 4) * (CARD_HEIGHT//4)))
+            surface.blit(card_small_img, (position[0] + (i % 4) * (CARD_WIDTH // 2 + 5), position[1] + 25 + (i // 4) * (CARD_HEIGHT//4)))
 
     def draw_captured_piles(self):
-        """Draws the cards captured by each player."""
-        self._draw_card_pile(self.screen, self.game_controller.player.captured_cards, (50, SCREEN_HEIGHT - 450), "Player's Captured")
-        self._draw_card_pile(self.screen, self.game_controller.cpu.captured_cards, (50, 50), "CPU's Captured")
+        """Draws the cards captured by each player, sorted by category."""
+        players_info = [
+            {"player": self.game_controller.player, "base_pos": (50, SCREEN_HEIGHT - 450), "name": "Player"},
+            {"player": self.game_controller.cpu, "base_pos": (50, 50), "name": "CPU"}
+        ]
+        categories = ['hikari', 'tane', 'tan', 'kasu']
+
+        for info in players_info:
+            player = info["player"]
+            base_pos = info["base_pos"]
+            name = info["name"]
+
+            categorized_cards = {cat: [] for cat in categories}
+            for card in player.captured_cards:
+                if card.category in categorized_cards:
+                    categorized_cards[card.category].append(card)
+
+            # Calculate horizontal spacing for the piles
+            # A pile can be up to 4 small cards wide.
+            pile_width = 4 * (CARD_WIDTH // 2 + 5) - 5
+            horizontal_spacing = pile_width + 25 # Add some padding
+
+            for i, category in enumerate(categories):
+                pos = (base_pos[0] + i * horizontal_spacing, base_pos[1])
+                title = f"{name} {category.capitalize()}"
+                self._draw_card_pile(self.screen, categorized_cards[category], pos, title)
 
     def draw_deck(self):
         """Draws the deck."""
