@@ -33,7 +33,7 @@ class UIManager:
     def draw_field(self):
         """Draws the cards on the field."""
         for i, card in enumerate(self.game_controller.field.cards):
-            card.rect.topleft = (100 + (i % 8) * (CARD_WIDTH * 0.7), 350 + (i // 8) * (CARD_HEIGHT + 5))
+            card.rect.topleft = (100 + (i % 8) * (CARD_WIDTH * 0.7), 250 + (i // 8) * (CARD_HEIGHT + 5))
             card.draw(self.screen)
 
     def draw_player_hand(self):
@@ -69,7 +69,7 @@ class UIManager:
 
     def draw_captured_piles(self):
         """Draws the cards captured by each player."""
-        self._draw_card_pile(self.screen, self.game_controller.player.captured_cards, (50, SCREEN_HEIGHT - 450), "Player's Captured")
+        self._draw_card_pile(self.screen, self.game_controller.player.captured_cards, (50, 520), "Player's Captured")
         self._draw_card_pile(self.screen, self.game_controller.cpu.captured_cards, (50, 50), "CPU's Captured")
 
     def draw_deck(self):
