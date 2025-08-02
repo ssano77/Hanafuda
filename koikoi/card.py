@@ -33,15 +33,27 @@ class Card:
         # Draw a border
         pygame.draw.rect(image, BLACK, image.get_rect(), 2)
 
-        # Add text
-        font = pygame.font.Font(None, 18)
-        month_text = font.render(f"M: {self.month}", True, BLACK)
-        name_text = font.render(self.name, True, BLACK)
+        # Add text with better formatting
+        font = pygame.font.Font(None, 16)
+        small_font = pygame.font.Font(None, 14)
+        
+        month_text = font.render(f"{self.month}月", True, BLACK)
         cat_text = font.render(self.category.capitalize(), True, BLACK)
+        
+        # Truncate long names
+        display_name = self.name
+        if len(display_name) > 8:
+            display_name = display_name[:8] + "..."
+        name_text = small_font.render(display_name, True, BLACK)
+        
+        # Points display
+        if self.points > 1:
+            points_text = small_font.render(f"{self.points}pt", True, BLACK)
+            image.blit(points_text, (5, CARD_HEIGHT - 20))
 
         image.blit(month_text, (5, 5))
-        image.blit(name_text, (5, 25))
-        image.blit(cat_text, (5, 45))
+        image.blit(cat_text, (5, 25))
+        image.blit(name_text, (5, 45))
 
         return image
 

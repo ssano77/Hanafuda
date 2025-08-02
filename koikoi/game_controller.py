@@ -22,6 +22,10 @@ class GameController:
 
         self.game_state = GAME_STATE_START
         self.winner_of_round = None
+        
+        # Add CPU turn delay
+        self.cpu_turn_timer = 0
+        self.cpu_turn_delay = 60  # 1 second at 60 FPS
 
     def start_game(self):
         """Starts a new 12-round game."""
@@ -71,6 +75,11 @@ class GameController:
         """Executes a full turn for the current player."""
         player = self.current_player
 
+        # Validate input
+        if not hand_card or hand_card not in player.hand:
+            print(f"Invalid card selection: {hand_card}")
+            return
+
         # 1. Play card from hand
         card_from_hand = player.play_card(hand_card)
         if card_from_hand:
@@ -78,8 +87,10 @@ class GameController:
 
         # 2. Draw card from deck
         if not self.deck.is_empty():
-            card_from_deck = self.deck.deal(1)[0]
-            self._handle_play(card_from_deck, player)
+            drawn_cards = self.deck.deal(1)
+            if drawn_cards:
+                card_from_deck = drawn_cards[0]
+                self._handle_play(card_from_deck, player)
 
         # 3. Check for yaku and decide next step
         self._check_yaku_and_decide(player)
@@ -151,10 +162,26 @@ class GameController:
 
     def switch_turns(self):
         """Switches the current player and checks for end-of-round conditions."""
-        if not self.player.hand and not self.cpu.hand:
-            # Draw game (both players out of cards)
-            self.winner_of_round = self.parent_player
-            self.parent_player.total_score += 6 # Parent gets 6 points
+        # Check if both players are out of cards or deck is empty
+        if (not self.player.hand and not self.cpu.hand) or self.deck.is_empty():
+            # Game ends - determine winner by captured cards
+            if not self.winner_of_round:
+                player_kasu = len([c for c in self.player.captured_cards if c.category == 'kasu'])
+                cpu_kasu = len([c for c in self.cpu.captured_cards if c.category == 'kasu'])
+                
+                if player_kasu > cpu_kasu:
+                    self.winner_of_round = self.player
+                    self.player.monthly_score = 1  # Basic score for winning by cards
+                elif cpu_kasu > player_kasu:
+                    self.winner_of_round = self.cpu
+                    self.cpu.monthly_score = 1
+                else:
+                    # Draw - parent gets points
+                    self.winner_of_round = self.parent_player
+                    self.parent_player.monthly_score = 6
+                
+                self._calculate_final_score()
+            
             self.game_state = GAME_STATE_ROUND_END
             return
 
@@ -195,4 +222,12 @@ class GameController:
     def update(self):
         """Updates the game state, currently only for CPU turn."""
         if self.game_state == GAME_STATE_CPU_TURN:
-            self.cpu_turn()
+            self.cpu_turn_timer += 1
+            if self.cpu_turn_timer >= self.cpu_turn_delay:
+                self.cpu_turn()
+                self.cpu_turn_timer = 0
+
+    def restart_game(self):
+        """Restarts the entire game."""
+        self.__init__()
+        self.start_game()
