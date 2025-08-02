@@ -18,6 +18,6 @@ class Field:
         """Finds cards on the field that have the same month as the given card."""
         return [card for card in self.cards if card.month == card_to_match.month]
 
-    def clear_field(self):
+    def clear(self):
         """Clears all cards from the field."""
         self.cards = []
